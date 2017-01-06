@@ -1,11 +1,11 @@
 # SQLiteDB_Swift
 
-支持`Swift2.2`
+支持`Swift3.0`
 
 安装步骤
 
 + 把`SQLiteDB`文件件拖放到项目中
-+ 添加库`libsqlite3.0.dylib`
++ 添加库`libsqlite3.tbd`
 + `Bridging-Header.h`中添加引用
 
 ```objc
