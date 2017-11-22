@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        createTable();
         return true
     }
 
@@ -39,6 +39,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    
+    func createTable(){
+        let db:SQLiteDB = SQLiteDB.sharedInstance;
+        //db.dropAllTable();
+        //创建数据库
+        
+        //聊天记录表
+        _ = db.execute(sql: "CREATE TABLE if not exists talkmessage( id integer PRIMARY KEY,msgType text,message text,senderName text,senderPic text, read integer,sender text,receiver text,srdate text,isReceive int,voiceDuration text)", parameters: nil);
+        //首页通知表
+        _ = db.execute(sql: "CREATE TABLE if not exists appmessage( id integer PRIMARY KEY,userId text,loginName text,name text,image text,detail text,time text,type text,msgType text,loginUserId text)", parameters: nil);
     }
 
 

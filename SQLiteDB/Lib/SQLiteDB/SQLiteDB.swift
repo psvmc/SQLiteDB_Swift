@@ -281,25 +281,25 @@ class SQLiteDB:NSObject {
 			let cntParams = sqlite3_bind_parameter_count(stmt)
 			let cnt = CInt(params!.count)
 			if cntParams != cnt {
-				let msg = "SQLiteDB - failed to bind parameters, counts did not match. SQL: \(sql), Parameters: \(params)"
+                let msg = "SQLiteDB - failed to bind parameters, counts did not match. SQL: \(sql), Parameters: \(String(describing: params))"
 				NSLog(msg)
 				return nil
 			}
 			var flag:CInt = 0
 			// Text & BLOB values passed to a C-API do not work correctly if they are not marked as transient.
 			for ndx in 1...cnt {
-//				NSLog("Binding: \(params![ndx-1]) at Index: \(ndx)")
+                let index = Int(ndx - 1);
 				// Check for data types
-				if let txt = params![ndx-1] as? String {
+				if let txt = params![index] as? String {
 					flag = sqlite3_bind_text(stmt, CInt(ndx), txt, -1, SQLITE_TRANSIENT)
-				} else if let data = params![ndx-1] as? NSData {
+				} else if let data = params![index] as? NSData {
 					flag = sqlite3_bind_blob(stmt, CInt(ndx), data.bytes, CInt(data.length), SQLITE_TRANSIENT)
-				} else if let date = params![ndx-1] as? NSDate {
+				} else if let date = params![index] as? NSDate {
 					let txt = fmt.string(from: date as Date)
 					flag = sqlite3_bind_text(stmt, CInt(ndx), txt, -1, SQLITE_TRANSIENT)
-				} else if let val = params![ndx-1] as? Double {
+				} else if let val = params![index] as? Double {
 					flag = sqlite3_bind_double(stmt, CInt(ndx), CDouble(val))
-				} else if let val = params![ndx-1] as? Int {
+				} else if let val = params![index] as? Int {
 					flag = sqlite3_bind_int(stmt, CInt(ndx), CInt(val))
 				} else {
 					flag = sqlite3_bind_null(stmt, CInt(ndx))
@@ -308,7 +308,7 @@ class SQLiteDB:NSObject {
 				if flag != SQLITE_OK {
 					sqlite3_finalize(stmt)
 					if let error = String(validatingUTF8:sqlite3_errmsg(self.db)) {
-						let msg = "SQLiteDB - failed to bind for SQL: \(sql), Parameters: \(params), Index: \(ndx) Error: \(error)"
+                        let msg = "SQLiteDB - failed to bind for SQL: \(sql), Parameters: \(String(describing: params)), Index: \(ndx) Error: \(error)"
 						NSLog(msg)
 					}
 					return nil
